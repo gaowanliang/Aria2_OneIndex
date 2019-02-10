@@ -213,7 +213,7 @@ port_exist_check(){
 OneIndex_install(){
     apt install git -y
     mkdir -p /home/wwwroot/${domain} && cd /home/wwwroot/${domain}
-	git clone https://github.com/gaowanliang/oneindex && mv oneindex/* ./
+	git clone https://github.com/gaowanliang/oneindex.git && mv oneindex/* ./
          chmod -R 777 config/ cache/
     if [[ $? -eq 0 ]];then
         echo -e "${OK} ${Blue} OneIndex 下载成功 ${Font}"
@@ -334,6 +334,7 @@ chmod +x /etc/init.d/aria2
 update-rc.d -f aria2 defaults
 cd /root/.aria2
 wget https://www.moerats.com/usr/shell/OneIndexupload.sh
+sed -i '3i\downloadpath=/home/wwwroot/'${domain}'/Download''' OneIndexupload.sh
 sed -i '4i\domain='${domain}'' OneIndexupload.sh
 sed -i '4i\folder='${folder}'' OneIndexupload.sh
 chmod +x /root/.aria2/OneIndexupload.sh
