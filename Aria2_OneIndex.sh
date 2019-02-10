@@ -2,7 +2,7 @@
 
 # ====================================================
 #	System Request:Debian 8、9
-#	Author:SPLiang
+#	Author:gaowanliang
 #	Aria2+Aria2Ng+OneIndex一键安装脚本
 # ====================================================
 
@@ -213,7 +213,7 @@ port_exist_check(){
 OneIndex_install(){
     apt install git -y
     mkdir -p /home/wwwroot/${domain} && cd /home/wwwroot/${domain}
-	git clone https://github.com/donwa/oneindex.git && mv oneindex/* ./
+	git clone https://github.com/gaowanliang/oneindex && mv oneindex/* ./
          chmod -R 777 config/ cache/
     if [[ $? -eq 0 ]];then
         echo -e "${OK} ${Blue} OneIndex 下载成功 ${Font}"
@@ -266,7 +266,6 @@ aria_install(){
 echo -e "${Green} 开始安装Aria2 ${Font}"
 apt-get install build-essential cron -y
 cd /root
-mkdir Download
 wget -N --no-check-certificate "https://github.com/q3aql/aria2-static-builds/releases/download/v${aria2_new_ver}/aria2-${aria2_new_ver}-linux-gnu-${KernelBit}bit-build1.tar.bz2"
 Aria2_Name="aria2-${aria2_new_ver}-linux-gnu-${KernelBit}bit-build1"
 tar jxvf "${Aria2_Name}.tar.bz2"
@@ -281,7 +280,7 @@ wget "https://www.moerats.com/usr/shell/Aria2/trackers-list-aria2.sh"
 echo '' > /root/.aria2/aria2.session
 chmod +x /root/.aria2/trackers-list-aria2.sh
 chmod 777 /root/.aria2/aria2.session
-echo "dir=/root/Download
+echo "dir=/home/wwwroot/${domain}/Download
 rpc-secret=${pass}
 
 
@@ -344,6 +343,9 @@ bash /etc/init.d/aria2 start
 standard(){
     basic_dependency
     domain_check
+    bash /etc/init.d/apache2 stop
+    bash update-rc.d -f apache2 remove
+    apt-get remove --purge apache2
     nginx_install
     php7_install
     OneIndex_install
